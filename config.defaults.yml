@@ -1,13 +1,15 @@
 # Pattern to input fastq files, use {sample} to indicate portion of filename
 # that corresponds to the sample name (e.g. data/{sample}.fq.gz)
 # The pipeline will automatically detect matching files and process each of them
-fastq_file_pattern: "data/{sample}.fastq.gz"
+fastq_file_pattern: "data/"
 
 # Output directories
 # Directory to put intermediate working files (trimmed reads, bam files, etc.)
 working_dir: "results/working"
 # Directory to store final results (count matrix, summary reports)
 results_dir: "results"
+# run the pipeline in single end or paired end
+if_SE: None # Options: True (force single-end), False (force paired-end), None (auto-detect)
 
 ref:
   # The fasta file for the reference sequence (STAR index will be built automatically)
