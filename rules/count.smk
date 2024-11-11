@@ -1,10 +1,12 @@
 rule count:
     input:
         gtf=config["ref"]["annotation"],
-        bam=config["working_dir"] + "/nudup/{sample}.sorted.markdup.bam" if config["umi"]["mark_umi_duplicates"] else config["working_dir"] + "/star/{sample}/Aligned.sortedByCoord.out.bam"
+        bam=config["working_dir"] + "/nudup/{sample}.sorted.markdup.bam" if config["umi"]["mark_umi_duplicates"] else config["working_dir"] + "/star/{sample}/{sample}_Aligned.sortedByCoord.out.bam"
     output:
         counts=config["working_dir"] + "/featurecounts/{sample}_counts.tsv",
         summary=config["working_dir"] + "/featurecounts/{sample}_counts.tsv.summary"
+    params:
+        ends="" if if_SE  else "-p"
     log:
         log_dir + "/featurecounts/{sample}.log"
     threads:
@@ -14,6 +16,7 @@ rule count:
     shell:
         "ln -s {input.bam:q} '{wildcards.sample}.bam' && "
         "featureCounts "
+        "{params.ends} "
         "-t {config[params][featurecounts][feature_type]} "
         "-g {config[params][featurecounts][attribute_type]} "
         "-a {input.gtf:q} "
@@ -27,7 +30,7 @@ rule count:
 rule combined_counts:
     input:
         expand(config["working_dir"] + "/featurecounts/{sample}_counts.tsv",
-               sample=samples.keys())
+               sample = SAMPLES_ALL if if_SE else SAMPLES_PAIRED)
     output:
         config["results_dir"] + "/combined_gene_counts.tsv"
     run:
