@@ -24,6 +24,9 @@ Starting with FASTQ files, the workflow 1) trims raw reads, 2) aligns them, and 
 *   `combined_gene_counts.tsv` - Tab delimited file of gene counts, one row per gene and one column per sample
 *   `multiqc.html` - Quality control summary showing number of reads, trimming, mapping, and counting statistics
 *   `QC_table.csv` - Quality control table
+  
+      columns of Paired-end: Sample,input_read_pairs,forward_only_surviving,reverse_only_surviving,after_trimmed,uniquely_mapped,assigned
+      columns of Single-end: Sample,input_reads,after_trimmed,uniquely_mapped,assigned
 *   `logs\` - Directory of log files for each job, check here first if you run into errors
 *   `working\` - Directory containing intermediate files for each job (*e.g.* bam files and count files for each sample)
 
@@ -66,7 +69,17 @@ Starting with FASTQ files, the workflow 1) trims raw reads, 2) aligns them, and 
     Place demultiplexed `fastq.gz` files in a `data` directory
 
 3.  Edit configuration files as needed
-
+   
+    fastq_file_pattern: "path/to/fastq/files"
+    
+    working_dir: "results/working"
+    
+    results_dir: "results"
+    
+    if_SE: None # Options: True (force single-end), False (force paired-end), None (auto-detect)
+    
+    If the data is 3′-enriched sequencing like TM3Seq, choose single-end.
+    
     ```bash
     cp config.defaults.yml myconfig.yml
     nano myconfig.yml
@@ -76,19 +89,19 @@ Starting with FASTQ files, the workflow 1) trims raw reads, 2) aligns them, and 
     nano mycluster_config.yml
     ```
 
-4.  Install dependencies into an isolated environment
+5.  Install dependencies into an isolated environment
 
     ```bash
     conda env create -n <project> --file environment.yml
     ```
 
-5.  Activate the environment
+6.  Activate the environment
 
     ```bash
     source activate <project>
     ```
 
-6.  Execute the workflow
+7.  Execute the workflow
 
     ```bash
     snakemake --configfile "myconfig.yml" --use-conda 
