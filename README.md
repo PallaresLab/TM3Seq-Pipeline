@@ -78,7 +78,7 @@ Starting with FASTQ files, the workflow 1) trims raw reads, 2) aligns them, and 
     
     if_SE: None # Options: True (force single-end), False (force paired-end), None (auto-detect)
     
-    If the data is 3′-enriched sequencing like TM3Seq, choose single-end. If the 'data' directory contains R1 and R2 fastq files, the SE mode will process both of them, but keep in mind that only R1 should be used when libraries are 3' enriched.
+    If the data is 3′-enriched sequencing like TM3Seq, choose single-end. If the 'data' directory contains R1 and R2 fastq files, the SE mode will process both of them, but keep in mind that only R1 should be used for analyses when libraries are 3' enriched.
     
     ```bash
     cp config.defaults.yml myconfig.yml
