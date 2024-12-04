@@ -1,6 +1,6 @@
 channels:
     - conda-forge
     - bioconda
-    - defaults
+    #- defaults
 dependencies:
     - nudup=2.3.3
