@@ -1,7 +1,7 @@
 channels:
     - conda-forge
     - bioconda
-    - defaults
+    #- defaults
 dependencies:
     - snakemake=5.4.2
     - drmaa=0.7.9
