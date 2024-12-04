@@ -46,7 +46,7 @@ Starting with FASTQ files, the workflow 1) trims raw reads, 2) aligns them, and 
 
     *   If you have [Anaconda](https://www.anaconda.com/distribution/) installed, you already have it.
     *   Otherwise, install the [Miniconda](https://conda.io/en/latest/miniconda.html) package.
-    *   If you are in the MPG intranet and meet issues during download Miniconda, you could install miniforge [Miniforge](https://github.com/conda-forge/miniforge)
+    *   If you are in the MPG intranet and meet issues during download Miniconda, you could install [Miniforge](https://github.com/conda-forge/miniforge)
     
 2.  Enable the [Bioconda](https://bioconda.github.io/#using-bioconda) channel
 
