@@ -5,3 +5,4 @@ channels:
 dependencies:
     - snakemake=5.4.2
     - drmaa=0.7.9
+    - python=3.9
