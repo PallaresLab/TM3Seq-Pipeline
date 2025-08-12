@@ -25,8 +25,8 @@ Starting with FASTQ files, the workflow 1) trims raw reads, 2) aligns them, and 
 *   `multiqc.html` - Quality control summary showing number of reads, trimming, mapping, and counting statistics
 *   `QC_table.csv` - Quality control table
   
-      columns of Paired-end: Sample,input_read_pairs,forward_only_surviving,reverse_only_surviving,after_trimmed,uniquely_mapped,assigned
-      columns of Single-end: Sample,input_reads,after_trimmed,uniquely_mapped,assigned
+      columns of Paired-end: Sample, input_read_pairs, forward_only_surviving, reverse_only_surviving, after_trimmed, uniquely_mapped, assigned
+      columns of Single-end: Sample, input_reads, after_trimmed, uniquely_mapped, assigned
 *   `logs\` - Directory of log files for each job, check here first if you run into errors
 *   `working\` - Directory containing intermediate files for each job (*e.g.* bam files and count files for each sample)
 
