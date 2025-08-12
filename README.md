@@ -177,17 +177,17 @@ snakemake \
 ```
 ### Running workflow using SGE
    
-    download snakemake-executor-plugin-cluster-generic by pip
-    ```bash
-    pip install snakemake-executor-plugin-cluster-generic
-    ```
-    then
-    ```bash
-    mkdir -p qsub_logs
-    snakemake \
-        --use-conda \
-        --jobs {cores}  \
-        --executor cluster-generic \
-        --cluster-generic-submit-cmd  \
-        "qsub -cwd -V -l h_vmem={resources.mem_mb}M  -pe parallel {threads} -o qsub_logs/ -e qsub_logs/"
-    ```
+download snakemake-executor-plugin-cluster-generic by pip
+```bash
+pip install snakemake-executor-plugin-cluster-generic
+```
+then
+```bash
+mkdir -p qsub_logs
+snakemake \
+  --use-conda \
+  --jobs {cores}  \
+  --executor cluster-generic \
+  --cluster-generic-submit-cmd  \
+  "qsub -cwd -V -l h_vmem={resources.mem_mb}M  -pe parallel {threads} -o qsub_logs/ -e qsub_logs/"
+```
