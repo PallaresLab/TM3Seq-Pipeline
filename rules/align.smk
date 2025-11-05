@@ -12,6 +12,8 @@ rule star_genome_index:
     log:
         log_dir + "/star/genome_index.log"
     threads: 32
+    resource:
+            mem_mb=50000
     conda:
         "../envs/star.yml"
     shell:
@@ -71,6 +73,8 @@ else:
         log:
             log_dir + "/star/{sample}.log"
         threads: 32
+        resource:
+            mem_mb=50000
         conda:
             "../envs/star.yml"
         shell:
