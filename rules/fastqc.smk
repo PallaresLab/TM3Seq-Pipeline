@@ -9,7 +9,7 @@ rule fastqc:
         outdir=config["working_dir"] + "/fastqc/{sample}",
     threads: 32
     resource:
-            mem_mb=2000*attempt
+        mem_mb=2000*attempt
     conda:
         "../envs/fastqc.yml"
     shell:
