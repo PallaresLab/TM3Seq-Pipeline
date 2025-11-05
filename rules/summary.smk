@@ -27,7 +27,7 @@ rule multiqc:
     log:
         log_dir + "/multiqc.log"
     resource:
-            mem_mb=10000
+        mem_mb=10000
     conda:
         "../envs/multiqc.yml"
     shell:
@@ -46,6 +46,8 @@ rule QC_table:
         config['results_dir']+"/QC_table.csv"
     params:
         if_SE=if_SE
+    resource:
+        mem_mb=10000
     log:
         log_dir + "/RNA_QCtable.log"
     shell:
