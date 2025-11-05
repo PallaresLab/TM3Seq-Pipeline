@@ -26,6 +26,8 @@ rule multiqc:
         output_name="multiqc.html",
     log:
         log_dir + "/multiqc.log"
+    resource:
+            mem_mb=10000
     conda:
         "../envs/multiqc.yml"
     shell:
