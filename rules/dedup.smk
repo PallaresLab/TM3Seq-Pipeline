@@ -12,7 +12,7 @@ rule nudup:
     log:
         log_dir + "/nudup/{sample}.log"
     resource:
-            mem_mb=2000*attempt
+        mem_mb=2000*attempt
     conda:
         "../envs/nudup.yml"
     shell:
