@@ -41,6 +41,8 @@ if if_SE:
         log:
             log_dir + "/star/{sample}.log"
         threads: 32
+        resource:
+            mem_mb=50000
         conda:
             "../envs/star.yml"
         shell:
