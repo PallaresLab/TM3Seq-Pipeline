@@ -11,8 +11,8 @@ rule count:
         log_dir + "/featurecounts/{sample}.log"
     threads:
         32
-    resource:
-        mem_mb=2000*attempt
+    resources:
+        mem_mb=lambda wildcards,attempt: 2000*attempt
     conda:
         "../envs/subread.yml"
     shell:
@@ -35,8 +35,8 @@ rule combined_counts:
                sample = SAMPLES_ALL if if_SE else SAMPLES_PAIRED)
     output:
         config["results_dir"] + "/combined_gene_counts.tsv"
-    resource:
-        mem_mb=2000*attempt
+    resources:
+        mem_mb=lambda wildcards,attempt: 2000*attempt
     run:
         shell("cut -f 1,7 {input[0]:q} > {output:q}")
         for f in input:
