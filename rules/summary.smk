@@ -26,8 +26,8 @@ rule multiqc:
         output_name="multiqc.html",
     log:
         log_dir + "/multiqc.log"
-    resource:
-        mem_mb=10000
+    resources:
+        mem_mb=lambda wildcards,attempt: 10000 * attempt
     conda:
         "../envs/multiqc.yml"
     shell:
@@ -46,8 +46,8 @@ rule QC_table:
         config['results_dir']+"/QC_table.csv"
     params:
         if_SE=if_SE
-    resource:
-        mem_mb=10000
+    resources:
+        mem_mb=lambda wildcards,attempt: 10000 * attempt
     log:
         log_dir + "/RNA_QCtable.log"
     shell:
