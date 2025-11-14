@@ -11,8 +11,8 @@ rule nudup:
         markdup=config["working_dir"] + "/nudup/{sample}.sorted.markdup.bam"
     log:
         log_dir + "/nudup/{sample}.log"
-    resource:
-        mem_mb=2000*attempt
+    resources:
+        mem_mb=2000
     conda:
         "../envs/nudup.yml"
     shell:
