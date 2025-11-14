@@ -11,8 +11,8 @@ if if_SE:
             log_dir + "/trimmomatic/{sample}.log"
         threads:
             32
-        resource:
-            mem_mb=2000*attempt
+        resources:
+            mem_mb=lambda wildcards,attempt: 2000 * attempt
         conda:
             "../envs/trimmomatic.yml"
         shell:
@@ -38,8 +38,8 @@ else:
             log_dir + "/trimmomatic/{sample}.log"
         threads:
             32
-        resource:
-            mem_mb=2000*attempt
+        resources:
+            mem_mb=lambda wildcards,attempt: 2000 * attempt
         conda:
             "../envs/trimmomatic.yml"
         shell:
