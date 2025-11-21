@@ -1,0 +1,8 @@
+channels:
+    - conda-forge
+    - bioconda
+    #- defaults
+dependencies:
+    - seaborn = 0.13.2
+    - pandas = 2.3.2
+    

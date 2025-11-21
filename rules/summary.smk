@@ -27,7 +27,7 @@ rule multiqc:
     log:
         log_dir + "/multiqc.log"
     resources:
-        mem_mb=lambda wildcards,attempt: 10000 * attempt
+        mem_mb=lambda wildcards,attempt: 30000 * attempt
     conda:
         "../envs/multiqc.yml"
     shell:
@@ -43,13 +43,17 @@ rule QC_table:
     input:
         config['results_dir']+"/multiqc_data"
     output:
-        config['results_dir']+"/QC_table.csv"
+        counts=config['results_dir']+"/QC_table_count.csv",
+        plot=config['results_dir']+"/QC_table_percentage.pdf",
     params:
-        if_SE=if_SE
+        if_SE=if_SE,
+        outprefix=config['results_dir']+"/QC_table"
     resources:
-        mem_mb=lambda wildcards,attempt: 10000 * attempt
+        mem_mb=lambda wildcards,attempt: 30000 * attempt
     log:
         log_dir + "/RNA_QCtable.log"
+    conda:
+        "../envs/QCtable.yml"
     shell:
-        "python rules/RNA_QCtable.py -m {input} -s {params.if_SE} -o {output}"
+        "python rules/RNA_QCtable.py -m {input} -s {params.if_SE} -o {params.outprefix}"
         " > {log} 2>&1 "
