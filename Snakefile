@@ -40,7 +40,7 @@ rule all:
     input:
         config["results_dir"] + "/multiqc.html",
         config["results_dir"] + "/combined_gene_counts.tsv",
-        config['results_dir']+"/QC_table.csv"
+        config['results_dir']+"/QC_table_count.csv"
         #expand("working/trimmed/{sample}.fastq.gz", sample=samples.keys())
 
 include: "rules/fastqc.smk"
