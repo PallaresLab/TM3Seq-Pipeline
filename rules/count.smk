@@ -39,7 +39,7 @@ rule combined_counts:
         mem_mb=lambda wildcards,attempt: 10000*attempt
     run:
         shell("cut -f 1,7 {input[0]:q} > {output:q}")
-        for f in input:
+        for f in input[1:]:
             shell("cp {output:q} tmp")
             shell("cut -f 7 {f:q} | paste tmp - > {output:q}")
         shell("rm tmp")
