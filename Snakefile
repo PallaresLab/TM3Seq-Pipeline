@@ -1,97 +1,51 @@
+# The main entry point of your workflow for Tn5 RNA-Seq Pipeline
+# After configuring, running snakemake -n in a clone of this repository should
+# successfully execute a dry-run of the workflow.
+
+import pandas as pd
 shell.executable("bash")
-import os
 
 from snakemake.utils import min_version
-import multiprocessing
-min_version("8.10.7")
+min_version("5.2.0")
 
-configfile: "config.yaml"
-log_dir = config['output_dir'] + "/logs"
-working_dir = config['output_dir'] + "/working"
-ref_basename=os.path.basename(config['reference_genome'])
-ref_name=os.path.splitext(os.path.basename(config['reference_genome']))[0]
-sample_files = snakemake.utils.listfiles(config["bam_dir"]+"/{sample}.bam")
+configfile: "config.defaults.yml"
+sample_files = snakemake.utils.listfiles(config["fastq_file_pattern"]+"/{sample}.fastq.gz")
 samples = dict((y[0], x) for x, y in sample_files)
+assert len(samples) > 0, "ERROR: No fastq files were found using pattern '{}' (set in configfile)".format(config["fastq_file_pattern"])
+SAMPLES_ALL = glob_wildcards(config['fastq_file_pattern']+"/{sample}.fastq.gz").sample
+SAMPLES_PAIRED = glob_wildcards(config['fastq_file_pattern']+"/{sample}_R1_001.fastq.gz").sample
 
-#singularity: "docker://broadinstitute/gatk"
+log_dir = config["results_dir"] + "/logs"
 
-def process_intervals(file_path, max_size=500000):
-    result = []
-    small_group = []
-    small_total = 0
-
-    with open(file_path, 'r') as f:
-        for line in f:
-            parts = line.strip().split()
-            if len(parts) != 3:
-                continue  # skip lines
-
-            chrom, start, end = parts
-            start, end = int(start), int(end)
-            size = end - start
-
-            if size >= max_size:
-                # Split into chunks of size max_size
-                while start < end:
-                    chunk_end = min(start + max_size, end)
-                    result.append([[chrom, start, chunk_end]])
-                    start = chunk_end
-            else:
-                # Add to small group for merging
-                small_group.append([chrom, start, end])
-                small_total += size
-
-                if small_total >= max_size:
-                    # Flush the current group
-                    result.append(small_group)
-                    small_group = []
-                    small_total = 0
-
-    # Add any remaining small intervals
-    if small_group:
-        result.append(small_group)
-
-    return result
-
-
-INTERVALS= process_intervals(config['bed_file'])
-IDX=list(range(len(INTERVALS)))
-print(IDX)
-"""
-INTERVALS = []
-
-for n in result:
-    l = []
-    for i in n:
-        chrom, start, end = i
-        l.append(f" -L {chrom}:{start+1}-{end}")  # Format string
-    INTERVALS.append(l)
+def get_fastq(wildcards):
+    return samples[wildcards.sample]
+    
+if_SE = (all("R1" not in name for name in samples.keys()) or all("R2" not in name for name in samples.keys())) if config['if_SE'] == "None" else config['if_SE']
 
 
 
+def get_matched_fastq(wildcards):   
+    paired_files = [samples[i] for i in samples.keys() if f'{wildcards.sample}_R' in i]
+    if len(paired_files) == 2 :
+        return sorted(paired_files)
+    else:
+        raise ValueError(f"Error in matched pairs {wildcards.sample}")
+        
+def get_paired_fastq(wildcards):
+    return get_matched_fastq(wildcards)
 
-INTERVALS = [f"-L {name}:{start+1}-{end}" for name, length in gd.items() for start, end in length]
-big_stuff={"2L","2R","3L","3R","X","Y","4"}
-bigints=[interv for interv in INTERVALS if interv.split(":")[0].split(" ")[1] in big_stuff]
-smallints=[interv for interv in INTERVALS if interv.split(":")[0].split(" ")[1] not in big_stuff]
-bigints.append(" ".join(smallints))
 
-print(len(INTERVALS),len(bigints),len(smallints))
-INTERVALS=bigints
-realints=[x for x in INTERVALS]
 
-"""
 rule all:
     input:
-        working_dir + "/JointCallSNPs/all_samples.vcf.gz"
+        config["results_dir"] + "/multiqc.html",
+        config["results_dir"] + "/combined_gene_counts.tsv",
+        config['results_dir']+"/QC_table_count.csv"
+        #expand("working/trimmed/{sample}.fastq.gz", sample=samples.keys())
 
-
-include: "rules/genome_prepare.smk"
-include: "rules/BQSR.smk"
-include: "rules/HaplotypeCaller.smk"
-include: "rules/JointCallSNPs.smk"
-#include: "rules/VQSR.smk"
-
-
-
-
+include: "rules/fastqc.smk"
+include: "rules/trim.smk"
+include: "rules/align.smk"
+include: "rules/dedup.smk"
+include: "rules/count.smk"
+include: "rules/summary.smk"
